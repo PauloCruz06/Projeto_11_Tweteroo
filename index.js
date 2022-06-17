@@ -24,8 +24,9 @@ server.post("/tweets", (req, res) => {
     if(req.body === null || req.body.username === "" || req.body.tweet === ""){
         res.status(400).send("Todos os campos são obrigatórios!");
     }
-    const avatar = userList.find((user) => req.body.username === user.username);
-    tweetsList.push({...req.body, avatar: avatar.avatar});
+    console.log(req.headers);
+    const user = userList.find((user) => req.headers.user === user.username);
+    tweetsList.push({ ...req.body, username: user.username, avatar: user.avatar });
     res.sendStatus(201); 
 });
 
