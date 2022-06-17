@@ -19,8 +19,9 @@ server.post("/tweets", (req, res) => {
 });
 
 server.get("/tweets", (_, res) => {
-    const lastTweets = tweetsList.filter((_, id) => (id <= 10));
-    res.send(lastTweets);
+    const lastTweets = [ ...tweetsList ];
+    lastTweets.reverse();
+    res.send(lastTweets.filter((_, id) => (id < 10)));
 });
 
 server.listen(5000);
