@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import validUrl from "valid-url";
 
 import { userList, tweetsList } from "./src/app.js";
 
@@ -8,14 +9,24 @@ server.use(express.json());
 server.use(cors());
 
 server.post("/sign-up", (req, res) => {
+    if(req.body === null || req.body.username === "" || req.body.avatar === ""){
+        res.status(400).send("Todos os campos são obrigatórios!");
+    }
+    if(!validUrl.isUri(req.body.avatar)){
+        res.status(400).send("Imagem inválida");
+    }
     userList.push(req.body);
-    res.send("OK");
+    console.log(userList);
+    res.sendStatus(201);
 });
 
 server.post("/tweets", (req, res) => {
+    if(req.body === null || req.body.username === "" || req.body.tweet === ""){
+        res.status(400).send("Todos os campos são obrigatórios!");
+    }
     const avatar = userList.find((user) => req.body.username === user.username);
     tweetsList.push({...req.body, avatar: avatar.avatar});
-    res.send("OK"); 
+    res.sendStatus(201); 
 });
 
 server.get("/tweets", (_, res) => {
