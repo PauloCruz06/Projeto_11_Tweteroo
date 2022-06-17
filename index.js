@@ -1,23 +1,21 @@
 import express from "express";
-import bodyParser from "body-parser";
 import cors from "cors";
 
 import { userList, tweetsList } from "./src/app.js";
 
 const server = express();
-server.use(bodyParser.json());
+server.use(express.json());
 server.use(cors());
 
 server.post("/sign-up", (req, res) => {
     userList.push(req.body);
-    console.log(req.body);
-    res.send("ok");
+    res.send("OK");
 });
 
 server.post("/tweets", (req, res) => {
-   tweetsList.push(req.body);
-   console.log(req.body);
-   res.send("ok"); 
+    const avatar = userList.find((user) => req.body.username === user.username);
+    tweetsList.push({...req.body, avatar: avatar.avatar});
+    res.send("OK"); 
 });
 
 server.get("/tweets", (_, res) => {
