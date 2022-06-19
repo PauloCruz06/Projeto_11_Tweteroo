@@ -20,7 +20,7 @@ server.post("/sign-up", (req, res) => {
 });
 
 server.post("/tweets", (req, res) => {
-    if(req.body === null || req.body.username === "" || req.body.tweet === ""){
+    if(req.body === null || req.headers === null || req.headers.user === ""){
         res.status(400).send("Todos os campos são obrigatórios!");
     }
     const user = userList.find((user) => req.headers.user === user.username);
