@@ -16,7 +16,6 @@ server.post("/sign-up", (req, res) => {
         res.status(400).send("Imagem inválida");
     }
     userList.push(req.body);
-    console.log(userList);
     res.sendStatus(201);
 });
 
@@ -29,10 +28,19 @@ server.post("/tweets", (req, res) => {
     res.sendStatus(201); 
 });
 
-server.get("/tweets", (_, res) => {
+server.get("/tweets", (req, res) => {
     const lastTweets = [ ...tweetsList ];
+    const page = req.query.page;
     lastTweets.reverse();
-    res.send(lastTweets.filter((_, id) => (id < 10)));
+    if(page !== undefined){
+        if(page <= "0" || page === ""){
+            res.status(400).send("Informe uma página válida!");
+        }else{
+            res.send(lastTweets.filter((_, id) => (id >= 10*page-10 && id < 10*page)));
+        }
+    }else{
+        res.send(lastTweets.filter((_, id) => id < 10));
+    }  
 });
 
 server.get("/tweets/:USERNAME", (req, res) => {
